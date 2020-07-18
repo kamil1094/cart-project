@@ -5,7 +5,7 @@ import { Cart, ICart, productElement } from "../models/cart";
 import { Product, IProduct } from "../models/product";
 
 export class CartController {
-  public async addProduct(req: Request, res: Response, next: NextFunction): Promise<any> {
+  public async createOrUpdateCart(req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
       const productId = req.params.productId;
       const quantity = req.query.quantity || 1;

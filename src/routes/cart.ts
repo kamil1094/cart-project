@@ -18,7 +18,7 @@ export class CartRoutes {
     this.router.put("/:productId",
       this.authorizationMiddleware.authorize,
       this.cartMiddleware.addOrRemoveProductValidation(),
-      this.cartController.addProduct
+      this.cartController.createOrUpdateCart
     );
     this.router.delete("/:productId",
       this.authorizationMiddleware.authorize,
