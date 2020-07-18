@@ -12,6 +12,7 @@ import config from "./config"
 
 import { UserRoutes } from "./routes/user";
 import { ProductRoutes } from "./routes/product";
+import { CartRoutes } from "./routes/cart";
 
 class Server {
   public app: express.Application;
@@ -31,6 +32,7 @@ class Server {
   public routes(): void {
     this.app.use("/api/user", new UserRoutes().router);
     this.app.use("/api/products", new ProductRoutes().router);
+    this.app.use("/api/cart", new CartRoutes().router);
   }
 
   public config(): void {
