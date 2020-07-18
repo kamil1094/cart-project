@@ -20,7 +20,7 @@ export class ProductController {
 
   public async getProduct(req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
-      const productId: string = req.params.id
+      const productId: string = req.params.productId
       const product: IProduct = await Product.findById(productId)
 
       if (!product) return res.status(404).json({ message: 'requested item does not exist.'})
@@ -69,7 +69,7 @@ export class ProductController {
 
   public async updateProduct(req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
-      const productId: string = req.params.id
+      const productId: string = req.params.productId
       const update = {
         ...req.body,
       }
@@ -83,7 +83,7 @@ export class ProductController {
 
   public async removeProduct(req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
-      const productId: string = req.params.id
+      const productId: string = req.params.productId
       await Product.findByIdAndDelete(productId)
 
       return res.json({ success: true, message: 'Product removed.' })

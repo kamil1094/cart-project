@@ -16,9 +16,9 @@ export class ProductRoutes {
 
   routes() {
     this.router.post("/", this.authorizationMiddleware.authorize, this.productMiddleware.imageValidation, this.productMiddleware.createProductValidation(), this.productController.createProduct);
-    this.router.get("/:id", this.authorizationMiddleware.authorize, this.productMiddleware.removeOrGetProductValidation(), this.productController.getProduct);
-    this.router.get("/", this.authorizationMiddleware.authorize, this.productMiddleware.getProductsValidation(), this.productController.getProducts);
-    this.router.put("/:id", this.authorizationMiddleware.authorize, this.productMiddleware.imageValidation, this.productMiddleware.updateProductValidation(), this.productController.updateProduct);
-    this.router.delete("/:id", this.authorizationMiddleware.authorize, this.productMiddleware.removeOrGetProductValidation() ,this.productController.removeProduct);
+    this.router.get("/:productId", this.authorizationMiddleware.authorize, this.productMiddleware.removeOrGetProductValidation(), this.productController.getProduct);
+    this.router.get("/", this.productMiddleware.getProductsValidation(), this.productController.getProducts);
+    this.router.put("/:productId", this.authorizationMiddleware.authorize, this.productMiddleware.imageValidation, this.productMiddleware.updateProductValidation(), this.productController.updateProduct);
+    this.router.delete("/:productId", this.authorizationMiddleware.authorize, this.productMiddleware.removeOrGetProductValidation() ,this.productController.removeProduct);
   }
 }
