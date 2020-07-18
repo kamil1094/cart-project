@@ -12,9 +12,9 @@ export class CartController {
       const user: IUser = await User.findById(req.user['_id'])
 
       if (user) {
-        let cart: ICart = req['cart']
+        let cart: ICart = await Cart.findOne({ user })
         const product: IProduct = await Product.findById(productId)
-
+        if (!product) return res.status(404).json({ message: 'Given product does not exsist.'})
         if (cart) {
           const itemIndex = cart.products.findIndex(el => el.product._id.toString() === productId)
 
@@ -29,7 +29,7 @@ export class CartController {
             })
           }
 
-          cart = await cart.save() 
+          cart = await await cart.save()
         } else {
           const products: productElement[] = [
             {
@@ -50,7 +50,6 @@ export class CartController {
       return res.status(404).json({ message: 'User requesting action does not exsist.'})
 
     } catch (err) {
-      console.log(err)
       return next(err)
     }
   }
@@ -81,6 +80,8 @@ export class CartController {
 
           return res.json({ cart })
         }
+
+        return res.status(404).json({ message: 'Item does not exist.'})
       }
 
       return res.status(404).json({ message: 'User requesting action does not exsist.'})
@@ -98,17 +99,16 @@ export class CartController {
 
       if (!cart) return res.status(404).json({ message: "Requested cart does not exist" });
 
-      const query = {};
       let index: number = 0;
 
       const count: number  = cart.products.length;
 
       let last = req.query.last
-      console.log(last)
-      const limit = req.query.limit ? req.query.limit : 10;
+
+      let limit = req.query.limit ? req.query.limit : 10;
 
       if (last) index = cart.products.findIndex(el => el['_id'].toString() === last.toString())
-      console.log(index)
+
       if (limit > 1 ) (limit as number) -= 1
       if (index > 0 ) index += 1
 

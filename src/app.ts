@@ -1,5 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
+import { Request, Response} from "express";
 
 import compression from "compression";
 import cors from "cors";
@@ -7,7 +8,9 @@ import { errors } from "celebrate"
 
 import dotenv from "dotenv";
 dotenv.config()
-
+process.on('uncaughtException', function (err) {
+  console.log(err);
+});
 import config from "./config"
 
 import { UserRoutes } from "./routes/user";
@@ -33,6 +36,9 @@ class Server {
     this.app.use("/api/user", new UserRoutes().router);
     this.app.use("/api/products", new ProductRoutes().router);
     this.app.use("/api/cart", new CartRoutes().router);
+    this.app.use('*', function(req: Request, res: Response){
+      res.status(404).send('Route not found.');
+    });
   }
 
   public config(): void {

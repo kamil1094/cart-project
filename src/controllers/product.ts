@@ -23,6 +23,8 @@ export class ProductController {
       const productId: string = req.params.id
       const product: IProduct = await Product.findById(productId)
 
+      if (!product) return res.status(404).json({ message: 'requested item does not exist.'})
+
       return res.json({ product })
     } catch (err) {
       return next(err)

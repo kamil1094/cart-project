@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express";
 
 import * as jwt from "jsonwebtoken";
 import passport from "passport"
-import bcrypt from "bcrypt-nodejs"
 
 import { User } from "../models/user";
 import { Token } from "../models/token";
@@ -35,7 +34,6 @@ export class UserController {
         if (err) return next(err);
   
         if (!user) return res.status(401).json({ message: "unauthorized" }); // change to use info.message maybe
-        
 
         return res.status(200).json({ token: jwt.sign({ email: user.email }, config.JWT_SECRET) });
       })(req, res, next)

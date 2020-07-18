@@ -1,9 +1,12 @@
-version: '3.1'
+version: '3.7'
 services:
   node:
     container_name: cart-project
-    restart: always
     build: .
+    environment: 
+      PORT: 3000
+      MONGODB_URI: mongodb://mongo:27017/cart-project
+      JWT_SECRET: 2h31g23rh23f
     ports:
       - '3000:3000'
     depends_on:
@@ -12,4 +15,4 @@ services:
     container_name: mongo
     image: mongo
     ports:
-      - '27018:27018'
+      - '27017:27017'

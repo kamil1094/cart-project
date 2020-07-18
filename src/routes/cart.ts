@@ -17,7 +17,6 @@ export class CartRoutes {
   routes() {
     this.router.put("/:productId",
       this.authorizationMiddleware.authorize,
-      this.authorizationMiddleware.authorizeBasketOwner,
       this.cartMiddleware.addOrRemoveProductValidation(),
       this.cartController.addProduct
     );
