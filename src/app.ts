@@ -8,14 +8,14 @@ import { errors } from "celebrate"
 
 import dotenv from "dotenv";
 dotenv.config()
-process.on('uncaughtException', function (err) {
-  console.log(err);
-});
+
 import config from "./config"
 
 import { UserRoutes } from "./routes/user";
 import { ProductRoutes } from "./routes/product";
 import { CartRoutes } from "./routes/cart";
+
+import { ErrorMiddleware } from "./middleware/error"
 
 class Server {
   public app: express.Application;
@@ -29,7 +29,8 @@ class Server {
     this.config();
     this.routes();
     this.mongo();
-    this.app.use(errors())
+    this.app.use(errors());
+    this.unhandledErrors();
   }
 
   public routes(): void {
@@ -39,6 +40,7 @@ class Server {
     this.app.use('*', function(req: Request, res: Response){
       res.status(404).send('Route not found.');
     });
+    this.app.use(new ErrorMiddleware().errorsHandler)
   }
 
   public config(): void {
@@ -46,6 +48,24 @@ class Server {
     this.app.use(express.urlencoded({ extended: false }));
     this.app.use(compression());
     this.app.use(cors());
+  }
+
+  private unhandledErrors(): void {
+    process.on('unhandledRejection', (reason, p) => {
+      console.info('Unhandled Rejection at: Promise reason:', JSON.stringify(reason),)
+    })
+
+    process.on('uncaughtException', function (err) {
+      console.error(err);
+    });
+
+    process.on('SIGINT', () => {
+      process.exit(0)
+    })
+
+    process.on('SIGTERM', () => {
+      process.exit(0)
+    })
   }
 
   private mongo() {
