@@ -10,7 +10,7 @@ export class CartController {
       const productId = req.params.productId;
       const quantity = req.query.quantity || 1;
       const user: IUser = await User.findById(req.user['_id'])
-
+      
       if (user) {
         let cart: ICart = await Cart.findOne({ user }).populate('products.product')
         const product: IProduct = await Product.findById(productId)
@@ -125,7 +125,7 @@ export class CartController {
     })
   }
 
-  static async updateCartProducts (cart: ICart, product: IProduct, quantity: number) {
+  static async updateCartProducts (cart: ICart, product: IProduct, quantity: number):Promise<ICart> {
     const itemIndex = cart.products.findIndex(el => el.product._id.toString() === product._id.toString())
     const newCartProducts = [
       ...cart.products
@@ -149,7 +149,7 @@ export class CartController {
     return cart.save()
   }
 
-  static async removeProductFromCart(cart: ICart, product: IProduct, itemIndex: number, quantityToRemove: number,) {
+  static async removeProductFromCart(cart: ICart, product: IProduct, itemIndex: number, quantityToRemove: number):Promise<ICart> {
     const availableQuantity: number = cart.products[itemIndex].quantity
     const resultQuantity: number = availableQuantity - quantityToRemove
 
