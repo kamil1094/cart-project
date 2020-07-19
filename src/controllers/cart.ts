@@ -12,36 +12,13 @@ export class CartController {
       const user: IUser = await User.findById(req.user['_id'])
 
       if (user) {
-        let cart: ICart = await Cart.findOne({ user })
+        let cart: ICart = await Cart.findOne({ user }).populate('products.product')
         const product: IProduct = await Product.findById(productId)
         if (!product) return res.status(404).json({ message: 'Given product does not exsist.'})
         if (cart) {
-          const itemIndex = cart.products.findIndex(el => el.product._id.toString() === productId)
-
-          if (itemIndex > -1) {
-            cart.products[itemIndex].quantity += quantity as number;
-            cart.products[itemIndex].price += (product.price * (quantity as number));
-          } else {
-            cart.products.push({
-              product,
-              quantity: quantity as number,
-              price: product.price * (quantity as number)
-            })
-          }
-
-          cart = await await cart.save()
+          cart = await CartController.updateCartProducts(cart, product, quantity as number)
         } else {
-          const products: productElement[] = [
-            {
-              product,
-              quantity: quantity as number,
-              price: product.price * (quantity as number)
-            }
-          ]
-          cart = await Cart.create({
-            user,
-            products,
-          })
+          cart = await CartController.createCart(user, product, quantity as number)
         }
 
         return res.json({ cart })
@@ -66,18 +43,7 @@ export class CartController {
         const itemIndex = cart.products.findIndex(el => el.product._id.toString() === productId)
 
         if (itemIndex > -1) {
-          const availableQuantity: number = cart.products[itemIndex].quantity
-          const resultQuantity: number = availableQuantity - (quantityToRemove as number)
-
-          if (resultQuantity > 0) {
-            cart.products[itemIndex].quantity = resultQuantity
-            cart.products[itemIndex].price = (product.price * resultQuantity)
-          } else {
-            cart.products = cart.products.filter((item, index) => index !== itemIndex)
-          }
-
-          cart = await cart.save()
-
+          cart = await CartController.removeProductFromCart(cart, product, itemIndex, quantityToRemove as number)
           return res.json({ cart })
         }
 
@@ -142,5 +108,66 @@ export class CartController {
         return res.json({ summary })
       }
     }
+  }
+
+  static async createCart (user: IUser, product: IProduct, quantity: number):Promise<ICart> {
+    const products: productElement[] = [
+      {
+        product,
+        quantity: quantity,
+        price: product.price * quantity
+      }
+    ]
+
+    return Cart.create({
+      user,
+      products,
+    })
+  }
+
+  static async updateCartProducts (cart: ICart, product: IProduct, quantity: number) {
+    const itemIndex = cart.products.findIndex(el => el.product._id.toString() === product._id.toString())
+    const newCartProducts = [
+      ...cart.products
+    ]
+
+    if (itemIndex > -1) {
+      newCartProducts[itemIndex].quantity += quantity as number;
+      newCartProducts[itemIndex].price += (product.price * (quantity as number));
+    } else {
+      newCartProducts.push({
+        product,
+        quantity: quantity as number,
+        price: product.price * (quantity as number)
+      })
+    }
+
+    cart.products = [
+      ...newCartProducts,
+    ]
+
+    return cart.save()
+  }
+
+  static async removeProductFromCart(cart: ICart, product: IProduct, itemIndex: number, quantityToRemove: number,) {
+    const availableQuantity: number = cart.products[itemIndex].quantity
+    const resultQuantity: number = availableQuantity - quantityToRemove
+
+    let newCartProducts: productElement[] = [
+      ...cart.products,
+    ]
+
+    if (resultQuantity > 0) {
+      newCartProducts[itemIndex].quantity = resultQuantity
+      newCartProducts[itemIndex].price = (product.price * resultQuantity)
+    } else {
+      newCartProducts = newCartProducts.filter((item, index) => index !== itemIndex)
+    }
+
+    cart.products = [
+      ...newCartProducts,
+    ]
+
+    return cart.save()
   }
 }
