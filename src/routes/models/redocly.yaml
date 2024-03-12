@@ -1,0 +1,63 @@
+# Welcome to the Redocly configuration file.
+# This YAML file is a universal configuration file, meaning all things Redocly can be configured here.
+# A few things to know before you begin to edit the file.
+# We have listed the options in alphabetical order, but the order is not mandatory.
+# No options are required as we have defaults that will take effect if you do not specifically set an option.
+# This file can and should be stored in the root of your project and subject to your source control system.
+# Have fun customizing your portal and if you need further explanation about any of the following options please check out our docs.
+
+#
+# apis:
+# apis overrides other keywords like rules, extends, decorators, etc
+# If you want to run your Redocly developer portal on-premise, you need
+# licenseKey:
+# redirects:
+# sso:
+# rbac:
+#   defaults:
+
+theme:
+  # imports:
+  # - '@redocly/theme'
+  # - somecompany/fancy-navbar
+  # - '@redocly/google-analytics'
+  # catalog: #...
+  # scripts:
+  #   head:
+  #   body:
+  # links:
+
+  logo:
+    image: https://redocly.com/static/logo-bb321acdb156828f8cde4945296fe786.png
+    # altText:
+    link: https://redocly.com
+    # favicon:
+  # navbar:
+  #   hide:
+  #   items:
+  footer:
+    # hide:
+    copyrightText: © 2022-2023, Redocly Inc. All right reserved.
+    items:
+      - group: Legal
+        items:
+          - label: Terms of Use
+            href: 'https://redocly.com/subscription-agreement/'
+          - label: Privacy Notice
+            href: 'https://redocly.com/privacy-policy/'
+          - label: Cookie Notice
+            href: 'https://redocly.com/privacy-policy/'
+      - group: Social
+        items:
+          - label: Facebook
+            href: 'https://www.facebook.com/redocly/'
+          - label: Youtube
+            href: 'https://www.youtube.com/channel/UCxYbPjnpqmHCmwg9iWf7wtQ'
+          - label: Twitter
+            href: 'https://twitter.com/Redocly'
+  feedback:
+    type: sentiment
+    settings:
+      comment:
+        likeLabel: Seriously?
+        dislikeLabel: What can we improve?
