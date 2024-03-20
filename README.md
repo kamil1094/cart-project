@@ -7,7 +7,7 @@ Simply clone repo and run: **docker-compose up**
 ## Postman collection for test requests
 https://www.postman.com/collections/982f52a2645e5241cf9d
   dfgfdgdgfdfg
-  sdfsdfsd
+sdfsdfdsf
 ## Available endpoints:  
 ### User  
 1) POST -> **/api/user/register**  
